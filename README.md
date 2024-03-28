@@ -1,4 +1,4 @@
-# search_wiki
+# Search wiki
 
 Steps to stream the app in local host
 
