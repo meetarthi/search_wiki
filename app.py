@@ -20,6 +20,13 @@ def POS(results):
     words_with_pos = [(word.text, word.pos_) for word in result]
     return words_with_pos
 
+def unique_pos(words_with_pos):
+    pos_list = set()
+    for word, pos in words_with_pos:
+        pos_list.add(pos)
+    unique_pos_list = list(pos_list)
+    return unique_pos_list
+
 def generate_pastel_color():
     # Generate random RGB components
     r = random.randint(128, 255)
@@ -41,11 +48,24 @@ def random_color_for_pos(words_with_pos):
             pos_colors[pos] = generate_pastel_color()
     return pos_colors
 
-def highlight_pos(words_with_pos,pos_colors):
+def generate_unique_keys(unique_pos_list):
+    keys = [f"box_{value}" for value in unique_pos_list]
+    return keys
+
+def Multi_pos_select(unique_pos_list, keys):
+    options = st.multiselect(
+        'What are your favorite colors',
+        unique_pos_list,
+        key=keys
+    )
+    return options
+
+def highlight_pos(words_with_pos,pos_colors,multiple_pos_select):
     highlighted_text = ''
     for word, pos in words_with_pos:
-        color = pos_colors[pos]
-        highlighted_text += '<span style="background-color:{}">{}</span> '.format(color, word)
+        if pos in multiple_pos_select:
+            color = pos_colors[pos]
+            highlighted_text += '<span style="background-color:{}">{}</span> '.format(color, word)
     display(HTML(highlighted_text))
     st.markdown(highlighted_text, unsafe_allow_html=True)
 
@@ -55,8 +75,17 @@ def main():
         pos_colors = random_color_for_pos(POS(results))
         for pos, color in pos_colors.items():
             st.sidebar.markdown('<div style="display:flex; align-items: center;"><div style="background-color:{}; width:20px; height:20px; margin-right:10px; border-radius: 5px;"></div><div>{}</div></div>'.format(color, pos), unsafe_allow_html=True)
-        highlight_pos(POS(results),random_color_for_pos(POS(results)))
-        print(pos_colors.items())  
+        unique_pos_list = unique_pos(POS(results))
+        keys = generate_unique_keys(unique_pos_list)
+        selected_pos = Multi_pos_select(unique_pos_list, keys)
+        st.write(results)
+        highlight_pos(POS(results), pos_colors, selected_pos)
+        # st.write(results)
+        # highlight_pos(POS(results),random_color_for_pos(POS(results)), Multi_pos_select(unique_pos(POS(results)),generate_unique_keys(unique_pos_list)))
+        # print(unique_pos(POS(results)))
+        # print(keys)
+
 
 if __name__ == '__main__':
     main()
+
