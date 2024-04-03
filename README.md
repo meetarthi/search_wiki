@@ -51,3 +51,7 @@ To run the app locally, follow these steps:
 
 8. You can now interact with the app locally.
 
+
+## Interface
+<img width="1433" alt="image" src="https://github.com/meetarthi/search_wiki/assets/112666126/f7319b2c-1863-4aec-89c2-3c7ec0d89999">
+
