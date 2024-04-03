@@ -5,6 +5,11 @@ import random
 from IPython.display import display, HTML
 
 def search():
+    """
+    Summarizes wiki content for the given search term.
+    If the search term not valid, returns none
+     
+    """
     st.title('Wiki Search')
     search_text = st.text_input('Enter search word:')
     try:
@@ -15,12 +20,21 @@ def search():
         return None
 
 def POS(results):
+    """
+    Extracts individual word along with the parts of speech,
+    by using spacy library
+    
+    """
     nlp = spacy.load('en_core_web_sm')
     result = nlp(results)
     words_with_pos = [(word.text, word.pos_) for word in result]
     return words_with_pos
 
 def unique_pos(words_with_pos):
+    """
+    Finding unique parts of speech in the results
+    
+    """
     pos_list = set()
     for word, pos in words_with_pos:
         pos_list.add(pos)
@@ -28,6 +42,11 @@ def unique_pos(words_with_pos):
     return unique_pos_list
 
 def generate_pastel_color():
+
+    """
+    Generating pastel colors to highlight the pos
+
+    """
     # Generate random RGB components
     r = random.randint(128, 255)
     g = random.randint(128, 255)
@@ -42,6 +61,10 @@ def generate_pastel_color():
     return color_code
 
 def random_color_for_pos(words_with_pos):
+    """
+    Generating Random pastel colors for each pos
+
+    """
     pos_colors = {}
     for word, pos in words_with_pos:
         if pos not in pos_colors:
@@ -49,10 +72,18 @@ def random_color_for_pos(words_with_pos):
     return pos_colors
 
 def generate_unique_keys(unique_pos_list):
+    """
+    Unique keys for multi select options
+
+    """
     keys = [f"box_{value}" for value in unique_pos_list]
     return keys
 
 def Multi_pos_select(unique_pos_list, keys):
+    """
+    Multi-select option for choosing pos
+
+    """
     options = st.multiselect(
         'What are your favorite colors',
         unique_pos_list,
@@ -61,11 +92,20 @@ def Multi_pos_select(unique_pos_list, keys):
     return options
 
 def highlight_pos(words_with_pos,pos_colors,multiple_pos_select):
+
+    """
+    Displays paragraph with selected pos corresponding words highlighted
+    
+    """
     highlighted_text = ''
     for word, pos in words_with_pos:
-        if pos in multiple_pos_select:
+        if pos not in multiple_pos_select:
+            highlighted_text += (word + " ") 
+
+        elif pos in multiple_pos_select:
             color = pos_colors[pos]
             highlighted_text += '<span style="background-color:{}">{}</span> '.format(color, word)
+    # highlighted_text = '-'.join(highlighted_text)
     display(HTML(highlighted_text))
     st.markdown(highlighted_text, unsafe_allow_html=True)
 
