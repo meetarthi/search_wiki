@@ -104,7 +104,7 @@ def highlight_pos(words_with_pos,pos_colors,multiple_pos_select):
 
         elif pos in multiple_pos_select:
             color = pos_colors[pos]
-            highlighted_text += '<span style="background-color:{}">{}</span> '.format(color, word)
+            highlighted_text += '<span style="background-color:{}"><a href="https://www.google.com/search?q={}" target="_blank"> {} </a></span> '.format(color, word, word)
     # highlighted_text = '-'.join(highlighted_text)
     display(HTML(highlighted_text))
     st.markdown(highlighted_text, unsafe_allow_html=True)
@@ -118,7 +118,7 @@ def main():
         unique_pos_list = unique_pos(POS(results))
         keys = generate_unique_keys(unique_pos_list)
         selected_pos = Multi_pos_select(unique_pos_list, keys)
-        st.write(results)
+        # st.write(results)
         highlight_pos(POS(results), pos_colors, selected_pos)
         # st.write(results)
         # highlight_pos(POS(results),random_color_for_pos(POS(results)), Multi_pos_select(unique_pos(POS(results)),generate_unique_keys(unique_pos_list)))
